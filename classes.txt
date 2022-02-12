@@ -1,0 +1,3 @@
+./bin/main/Pkg2/Pkg2Class.class
+./bin/main/App.class
+./bin/main/Pkg1/Pkg1Class.class

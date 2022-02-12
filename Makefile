@@ -5,15 +5,21 @@ JC = javac
 JFLAGS = -g -d $(DIST)
 
 
+source:
+	find $(SRC) -name "*.java" > sources.txt
 
 compile:
-		$(JC) $(JFLAGS) $(SRC)/*.java
+		$(JC) $(JFLAGS) @sources.txt
 
 run:
-		java -cp $(DIST) App
+		java -cp $(DIST) main.App
 
 build:
-		jar -cvmf  Manifest.txt  app.jar $(DIST)/*.class
+		find $(DIST) -name "*.class" > classes.txt
+		jar cvfm App.jar Manifest.txt @classes.txt
 
 exec:
-		java -jar app.jar
+		java -jar App.jar
+
+clean:
+		rm -rf $(DIST)/*
