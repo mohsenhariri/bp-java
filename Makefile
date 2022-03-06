@@ -1,3 +1,8 @@
+PATH := ./.bin:${PATH}
+.PHONY: all dev clean
+include .env
+export
+
 SRC = ./src
 DIST = ./bin
 
@@ -13,6 +18,8 @@ compile:
 
 run:
 		java -cp $(DIST) main.App
+
+all: source compile run
 
 build:
 		find $(DIST) -name "*.class" > classes.txt

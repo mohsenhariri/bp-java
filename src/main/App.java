@@ -7,6 +7,7 @@ public class App {
   public static void main(String[] args) {
     Pkg1Class.pkg1class1();
     Pkg2Class.pkg2class1();
+    System.out.println(System.getenv("PORT"));
 
   }
 }
