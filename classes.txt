@@ -1,3 +1,2 @@
-./bin/main/Pkg2/Pkg2Class.class
-./bin/main/App.class
-./bin/main/Pkg1/Pkg1Class.class
+target/com/pokeverse/pokemon/AppTest.class
+target/com/pokeverse/pokemon/App.class

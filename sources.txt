@@ -1,3 +1,2 @@
-./src/main/Pkg2/Pkg2Class.java
-./src/main/App.java
-./src/main/Pkg1/Pkg1Class.java
+src/test/java/com/pokeverse/pokemon/AppTest.java
+src/main/java/com/pokeverse/pokemon/App.java
