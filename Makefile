@@ -32,7 +32,6 @@ PACKAGE = pokemon
 
 FPN = $(COMPANY).$(PROJECT).$(PACKAGE)
 
-
 JFLAGS = -g -d $(DIST)
 
 .PHONY: env test all dev clean dev gen-commands $(SRC) $(DIST) $(BUILD)
@@ -56,9 +55,7 @@ compile:
 		$(JC) $(JFLAGS) -cp "$(DIST):$(LIB)/*" @sources.txt
 
 run:
-		# $(JAVA) -cp "$(DIST):$(LIB)/*" com.pokeverse.pokemon.App
 		$(JAVA) -cp "$(DIST):./lib/*" $(FPN).App
-
 
 all: source compile run
 
