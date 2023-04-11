@@ -19,8 +19,6 @@ DOCKER := /usr/bin/docker
 PATH := ./bin:$(PATH)
 
 .PHONY: all dev clean
-include .env
-export
 
 SRC = src
 DIST = target
@@ -79,5 +77,3 @@ download-dependencies:
 		wget https://repo1.maven.org/maven2/junit/junit/4.13/junit-4.13.jar -P $(LIB)
 		# download commons-dbcp2 to ./lib
 		wget https://repo1.maven.org/maven2/org/apache/commons/commons-dbcp2/2.8.0/commons-dbcp2-2.8.0.jar -P $(LIB)
-
-		
