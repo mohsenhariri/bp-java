@@ -52,4 +52,4 @@ exec:
 		java -jar App.jar
 
 clean:
-		rm -rf $(DIST)/*
+		rm -r ./$(DIST)
