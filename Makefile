@@ -1,11 +1,13 @@
 # https://www.gnu.org/software/make/manual/make.html
 SHELL := /bin/bash
+ENV ?= env  # default, other options: test, prod
 
-include .env.dev
+include .env.$(ENV)
 export
 
 include *.make
 
+WORKDIR := $(shell pwd)
 VERSION := $(shell cat VERSION)
 PROJECT := $(shell basename $(CURDIR))
 
@@ -20,21 +22,19 @@ DOCKER := /usr/bin/docker
 
 PATH := ./bin:$(PATH)
 
-.PHONY: all dev clean
+SRC := src
+DIST := target
+LIB := lib
 
-SRC = src
-DIST = target
-LIB = lib
+COMPANY ?= com
+PROJECT ?= pokeverse
+PACKAGE ?= pokemon
 
-COMPANY = com
-PROJECT = pokeverse
-PACKAGE = pokemon
+FPN := $(COMPANY).$(PROJECT).$(PACKAGE)
 
-FPN = $(COMPANY).$(PROJECT).$(PACKAGE)
+JFLAGS := -g -d $(DIST)
 
-JFLAGS = -g -d $(DIST)
-
-.PHONY: env test all dev clean dev gen-commands $(SRC) $(DIST) $(BUILD)
+.PHONY: env test all dev clean $(SRC) $(DIST) $(BUILD)
 
 .DEFAULT_GOAL := test
 
@@ -47,6 +47,17 @@ test:
 		@$(JAVA) --version
 		@$(JAR) --version
 		@$(JC) --version
+
+switch-env:
+		sed -i 's/ENV ?= env/ENV ?= $(filter-out $@,$(MAKECMDGOALS))/' Makefile
+
+deps:
+		@while read -r line; do \
+			if [[ ! $$line =~ ^# ]]; then \
+				wget $$line -nc -P $(LIB); \
+				# Add your command to process the URL here \
+			fi; \
+		done < deps
 
 source:
 		find $(SRC) -name "*.java" > sources.txt
@@ -71,11 +82,3 @@ clean:
 
 test-main:
 		$(JAVA) -cp "$(DIST):$(LIB)/*" org.junit.runner.JUnitCore $(FPN).AppTest
-
-deps:
-		@while read -r line; do \
-			if [[ ! $$line =~ ^# ]]; then \
-				wget $$line -nc -P $(LIB); \
-				# Add your command to process the URL here \
-			fi; \
-		done < deps
