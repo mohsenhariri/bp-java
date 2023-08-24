@@ -2,20 +2,22 @@
 SHELL := /bin/bash
 ENV ?= env  # default, other options: test, prod
 
-include .env.$(ENV)
+-include .env.$(ENV)
 export
 
-include *.make
+-include *.make
 
 WORKDIR := $(shell pwd)
 VERSION := $(shell cat VERSION)
-PROJECT := $(shell basename $(CURDIR))
+# PROJECT := $(shell basename $(CURDIR))
+COMPANY ?= com
+PROJECT ?= pokeverse
+PACKAGE ?= pokemon
 
-# JAVA := /home/mohsen/compiler/jdk/bin/java
+FPN := $(COMPANY).$(PROJECT).$(PACKAGE)
+
 JAVA := /usr/bin/java
-# JAR := /home/mohsen/compiler/jdk/bin/jar
 JAR := /usr/bin/jar
-# JC := /home/mohsen/compiler/jdk/bin/javac
 JC := /usr/bin/javac
 
 DOCKER := /usr/bin/docker
@@ -26,21 +28,16 @@ SRC := src
 DIST := target
 LIB := lib
 
-COMPANY ?= com
-PROJECT ?= pokeverse
-PACKAGE ?= pokemon
-
-FPN := $(COMPANY).$(PROJECT).$(PACKAGE)
-
 JFLAGS := -g -d $(DIST)
 
-.PHONY: env test all dev clean $(SRC) $(DIST) $(BUILD)
+
+.PHONY: env test all dev clean deps $(SRC) $(DIST) $(BUILD)
 
 .DEFAULT_GOAL := test
 
 .ONESHELL:
 
-%: # https://www.gnu.org/software/make/manual/make.html#Automatic-Variables 
+%:
 		@:
 
 test:
@@ -51,7 +48,7 @@ test:
 switch-env:
 		sed -i 's/ENV ?= env/ENV ?= $(filter-out $@,$(MAKECMDGOALS))/' Makefile
 
-deps:
+deps: dirs
 		@while read -r line; do \
 			if [[ ! $$line =~ ^# ]]; then \
 				wget $$line -nc -P $(LIB); \
@@ -62,7 +59,7 @@ deps:
 source:
 		find $(SRC) -name "*.java" > sources.txt
 
-compile:
+compile: dirs
 		$(JC) $(JFLAGS) -cp "$(DIST):$(LIB)/*" @sources.txt
 
 run:
@@ -70,15 +67,19 @@ run:
 
 all: source compile run
 
-build:
-		find $(DIST) -name "*.class" > classes.txt
+build: dirs
+		@find $(DIST) -name "*.class" > classes.txt
 		$(JAR) cvfm App.jar Manifest.txt -C $(DIST) . -C $(LIB) .
 
 exec:
 		$(JAVA) -cp "$(DIST):$(LIB)/*:./App.jar" $(FPN).App
 
 clean:
-		rm -r ./$(DIST)
+		@rm -r ./$(DIST)
+		@rm sources.txt classes.txt App.jar
 
 test-main:
 		$(JAVA) -cp "$(DIST):$(LIB)/*" org.junit.runner.JUnitCore $(FPN).AppTest
+
+dirs:
+		@mkdir -p $(DIST) $(LIB)

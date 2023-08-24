@@ -1,2 +1,0 @@
-target/com/pokeverse/pokemon/AppTest.class
-target/com/pokeverse/pokemon/App.class

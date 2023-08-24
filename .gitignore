@@ -6,3 +6,7 @@ build/
 # Ignore package files
 *.jar
 *.war
+
+# Build
+sources.txt
+classes.txt
